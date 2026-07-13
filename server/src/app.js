@@ -3,6 +3,8 @@ import cors from 'cors';
 import projectsRouter from './routes/projects.js';
 import processesRouter from './routes/processes.js';
 import exportRouter from './routes/export.js';
+import aiRouter from './routes/ai.js';
+import documentsRouter from './routes/documents.js';
 
 export function createApp() {
   const app = express();
@@ -14,6 +16,8 @@ export function createApp() {
   app.use('/api/projects', projectsRouter);
   app.use('/api/processes', processesRouter);
   app.use('/api/export', exportRouter);
+  app.use('/api/ai', aiRouter);
+  app.use('/api/documents', documentsRouter);
 
   app.use('/api', (req, res) => res.status(404).json({ error: 'Not found' }));
 
