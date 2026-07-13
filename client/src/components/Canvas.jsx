@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -6,6 +6,8 @@ import {
   MiniMap,
   useReactFlow,
   ReactFlowProvider,
+  applyNodeChanges,
+  applyEdgeChanges,
 } from '@xyflow/react';
 import { useNavigate } from 'react-router-dom';
 import { genId } from '@eatransform/shared';
@@ -29,6 +31,30 @@ function CanvasInner({ highlight }) {
   const wrapRef = useRef(null);
 
   const view = useMemo(() => deriveView(map, { highlight }), [map, highlight]);
+
+  // React Flow is controlled: keep a local copy of nodes/edges so selection
+  // and live dragging work, re-synced whenever the canonical map changes.
+  const [rfNodes, setRfNodes] = useState(view.rfNodes);
+  const [rfEdges, setRfEdges] = useState(view.rfEdges);
+  useEffect(() => {
+    setRfNodes((prev) => {
+      const selected = new Set(prev.filter((n) => n.selected).map((n) => n.id));
+      return view.rfNodes.map((n) => (selected.has(n.id) ? { ...n, selected: true } : n));
+    });
+    setRfEdges((prev) => {
+      const selected = new Set(prev.filter((e) => e.selected).map((e) => e.id));
+      return view.rfEdges.map((e) => (selected.has(e.id) ? { ...e, selected: true } : e));
+    });
+  }, [view]);
+
+  const onNodesChange = useCallback(
+    (changes) => setRfNodes((nds) => applyNodeChanges(changes.filter((c) => c.type !== 'remove'), nds)),
+    []
+  );
+  const onEdgesChange = useCallback(
+    (changes) => setRfEdges((eds) => applyEdgeChanges(changes.filter((c) => c.type !== 'remove'), eds)),
+    []
+  );
 
   const onNodeDragStop = useCallback(
     (evt, rfNode) => {
@@ -158,8 +184,10 @@ function CanvasInner({ highlight }) {
   return (
     <div ref={wrapRef} style={{ width: '100%', height: '100%' }}>
       <ReactFlow
-        nodes={view.rfNodes}
-        edges={view.rfEdges}
+        nodes={rfNodes}
+        edges={rfEdges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
         onNodeDragStop={onNodeDragStop}
         onConnect={onConnect}

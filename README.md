@@ -81,7 +81,11 @@ docs/     Setup and architecture documentation.
 ## Testing
 
 ```bash
-npm test           # shared + server + client unit/integration suites
+npm test           # shared + server + client unit/integration suites (78 tests)
+
+# End-to-end browser drive (needs a built client and a running server):
+npm run build && npm start &
+npm run test:e2e   # dashboard → AI generation → editing → insights → exports
 ```
 
 The suites cover: schema validation & repair, layout (incl. 2000-node
