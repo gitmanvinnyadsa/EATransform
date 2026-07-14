@@ -7,6 +7,8 @@ import { initDb, closeDb } from '../src/db.js';
 import { createApp } from '../src/app.js';
 import { extractJson } from '../src/ai/jsonRepair.js';
 import { callAi, IntakeReplySchema } from '../src/ai/service.js';
+import { getProvider } from '../src/ai/providers/index.js';
+import { loadConfig } from '../src/config.js';
 import { sampleOrderFulfilmentMap } from '@eatransform/shared';
 
 let app;
@@ -204,6 +206,25 @@ describe('AI service resilience', () => {
   it('records usage', async () => {
     const res = await request(app).get('/api/ai/usage');
     expect(res.body.total.calls).toBeGreaterThan(0);
+  });
+});
+
+describe('provider registry', () => {
+  it('builds the Groq provider from config', () => {
+    const p = getProvider({ provider: 'groq', apiKey: 'gsk_test', model: 'llama-3.3-70b-versatile', timeoutMs: 1000 });
+    expect(p.name).toBe('groq');
+    expect(p.model).toBe('llama-3.3-70b-versatile');
+    expect(typeof p.complete).toBe('function');
+  });
+
+  it('defaults the Groq model when AI_MODEL is unset', () => {
+    const cfg = loadConfig({ AI_PROVIDER: 'groq', AI_API_KEY: 'gsk_test' });
+    expect(cfg.ai.provider).toBe('groq');
+    expect(cfg.ai.model).toBe('llama-3.3-70b-versatile');
+  });
+
+  it('uses the offline analyst when a provider has no key', () => {
+    expect(getProvider({ provider: 'groq', apiKey: '' }).name).toBe('mock');
   });
 });
 

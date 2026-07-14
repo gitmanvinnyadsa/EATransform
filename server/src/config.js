@@ -13,6 +13,7 @@ const DEFAULT_MODELS = {
   gemini: 'gemini-2.0-flash',
   anthropic: 'claude-sonnet-5',
   openai: 'gpt-4o-mini',
+  groq: 'llama-3.3-70b-versatile',
   mock: 'mock-analyst-1',
 };
 
@@ -24,6 +25,7 @@ export function loadConfig(env = process.env) {
     env.GOOGLE_API_KEY ||
     env.ANTHROPIC_API_KEY ||
     env.OPENAI_API_KEY ||
+    env.GROQ_API_KEY ||
     '';
   return {
     port: Number(env.PORT) || 4000,

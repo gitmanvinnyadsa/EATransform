@@ -32,16 +32,26 @@ Anthropic Claude and OpenAI keys work too — see Step 3.
 > to the AI provider, and it is never stored in the database or in exports.
 > `.env` is ignored by git, so it can't be committed by accident.
 
-## Step 3 — (Optional) use Claude or OpenAI instead
+## Step 3 — (Optional) use Groq, Claude, or OpenAI instead
 
-Only the configuration changes — no code:
+Only the configuration changes — no code.
+
+**Groq** — a second free option, faster and with more generous limits than
+Gemini's free tier (get a key at <https://console.groq.com/keys>):
+
+```
+AI_PROVIDER=groq
+AI_API_KEY=gsk_…
+```
+
+**Claude** (paid — add credit at <https://console.anthropic.com/>):
 
 ```
 AI_PROVIDER=anthropic
 AI_API_KEY=sk-ant-…
 ```
 
-or
+**OpenAI** (paid):
 
 ```
 AI_PROVIDER=openai
@@ -49,7 +59,8 @@ AI_API_KEY=sk-…
 ```
 
 You can also pin a specific model with `AI_MODEL=` (defaults:
-`gemini-2.0-flash`, `claude-sonnet-5`, `gpt-4o-mini`).
+`gemini-2.0-flash`, `llama-3.3-70b-versatile`, `claude-sonnet-5`,
+`gpt-4o-mini`).
 
 ## Step 4 — Restart the application
 

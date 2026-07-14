@@ -28,7 +28,7 @@ export default function SettingsPage() {
                 Provider: <b>{status.provider}</b> · Model: <b>{status.model}</b>
               </p>
               <p className="muted">
-                To switch providers (Gemini, Claude, OpenAI) or models, change <code>AI_PROVIDER</code> /{' '}
+                To switch providers (Gemini, Claude, OpenAI, Groq) or models, change <code>AI_PROVIDER</code> /{' '}
                 <code>AI_MODEL</code> in the <code>.env</code> file and restart the server. No code changes needed.
               </p>
             </div>

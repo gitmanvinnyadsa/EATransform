@@ -1,12 +1,14 @@
 import { createGeminiProvider } from './gemini.js';
 import { createAnthropicProvider } from './anthropic.js';
 import { createOpenAiProvider } from './openai.js';
+import { createGroqProvider } from './groq.js';
 import { createMockProvider } from './mock.js';
 
 const FACTORIES = {
   gemini: createGeminiProvider,
   anthropic: createAnthropicProvider,
   openai: createOpenAiProvider,
+  groq: createGroqProvider,
   mock: createMockProvider,
 };
 
